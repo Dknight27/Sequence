@@ -6,9 +6,14 @@ using namespace std;
 
 int main()
 {
-    Sequence test("dna.txt");
-    cout<<test.length()<<endl;
-    cout<<numberOf()<<end;
-    cout<<test.longestConsecutive()<<endl;
-    cout<<test.longestRepeated();
+    string filename="dna.txt";
+    Sequence test(filename);
+    cout<<"Length:"<<test.length()<<endl;
+    cout<<"Number of:"<<test.numberOf('A')<<endl;
+	cout<<"Number of:"<<test.numberOf('C')<<endl;
+	cout<<"Number of:"<<test.numberOf('G')<<endl;
+	cout<<"Number of:"<<test.numberOf('T')<<endl;
+    cout<<"LongestConsecutive:"<<test.longestConsecutive()<<endl;
+    cout<<test.longestRepeated()<<endl;
 }
+
