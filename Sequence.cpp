@@ -3,109 +3,122 @@
 #include<fstream>
 #include<string>
 #include<cstring>
+#include<cstdlib>
+
 using namespace std;
 char dna[1200000];
 char* start;
-char* ch;
+char* coor[1200000];
 Sequence::Sequence(string filename)
 {
-    ifstream fin;
-    fin.open(filename);
-	if(!fin)
+	char* ch;
+	ifstream fin;
+	fin.open(filename);
+	if (!fin)
 	{
-		cerr<<"There is something wrong."<<endl;
+		cerr << "There is something wrong." << endl;
 	}
-	cout<<"First"<<endl;
-	start=dna;
-	ch=dna;
-    while(fin>>ch)
+	start = dna;
+	ch = dna;
+	while (!fin.eof())
 	{
-		ch+=100;
+		fin >> ch;
+		ch += 100;
 	};
+	for (int i = 0; start[i] != '\0'; i++)
+		coor[i] = &dna[i];
+	*(start+strlen(dna)) = '\0';
+	fin.close();
 }
 
 int Sequence::length()
 {
-    return strlen(start);
+	return strlen(start);
 }
 
 int Sequence::numberOf(char base)
 {
-    int count=0;
-    for(int i=0;start[i]!='\0';i++)
-    {
-        if(start[i]==base)
-            count++;
-    }
-    return count;
+	int count = 0;
+	for (int i = 0; start[i] != '\0'; i++)
+	{
+		if (start[i] == base)
+			count++;
+	}
+	return count;
 }
 
 string Sequence::longestConsecutive()
 {
-    string pre;
-    string longest;
-	char base='A';
-    int count_pre=0;
-    int count_longest=0;
-    for(int i=0;start[i+1]!='\0';i++)
-    {
-        count_pre=0;
-        base=start[i];
-		if(start[i]==start[i+count_longest-1])
+	string pre;
+	string longest;
+	char base = 'A';
+	int count_pre = 0;
+	int count_longest = 0;
+	for (int i = 0; start[i + 1] != '\0'; i++)
+	{
+		count_pre = 0;
+		base = start[i];
+		if (dna[i] == dna[i + count_longest - 1])
 		{
-        for(int j=i;;j++)
-        {
-            if(start[j+1]==start[j])
-            {
-                count_pre++;
-            }
-            else
-            {
-                i=j;break;
-		    }
-        }
-        if(count_pre>count_longest)
-        {
-            count_longest=count_pre;
-            longest=pre;
-			for(int m=0;m<=count_longest;m++)
-				longest+=base;
+			for (int j = i;; j++)
+			{
+				if (start[j + 1] == start[j])
+				{
+					count_pre++;
+				}
+				else
+				{
+					i = j; break;
+				}
+			}
+			if (count_pre>count_longest)
+			{
+				count_longest = count_pre;
+				longest = pre;
+				for (int m = 0; m <= count_longest; m++)
+					longest += base;
+			}
 		}
-		}
-    }
-    return longest;
+	}
+	return longest;
+}
+
+int commonlen(char *p, char *q)
+{
+	int i = 0;
+	while (*p && (*p++ == *q++))
+	{
+		++i;
+	}
+	return i;
+}
+
+int pstrcmp(const void *p1, const void *p2)
+{
+	return strcmp(*(char* const *)p1, *(char* const*)p2);
 }
 
 string Sequence::longestRepeated()
 {
-    string pre;
-    string longest;
-    int count_pre=0;
-    int count_longest=0;
-    for(int i=0;start[i+1]!='\0';i++)
-    {
-        int k=i+1;
-        while(start[k]!=start[i]){k++;}
-        for(int j=k;;j++)
-        {
-            pre[0]=start[j];
-            int count_pre=1;
-            if(start[j+count_pre]==start[i+count_pre])
-            {
-                count_pre;
-                pre[count_pre]=start[j+count_pre];
-            }
-            else
-            {
-                i+=count_pre;break;
-            }
-        }
-        if(count_pre>count_longest)
-        {
-            count_longest=count_pre;
-            longest=pre;
-        }
-    }
-    return longest;
-}
+	int len = strlen(dna);
+	int n = 0;
+	int l;
+	int count_longest = 0;
+	int index = 0;
 
+	qsort(coor, len, sizeof(char*), pstrcmp);
+	for (int i = 0; i<len - 1; i++)
+	{
+		l = commonlen(coor[i], coor[i + 1]);
+		if (l>count_longest)
+		{
+			count_longest = l;
+			index = i;
+		}
+	}
+
+	char *longestre = new char[count_longest + 1];
+	longestre = coor[index];
+	longestre[count_longest+1] = '\0';
+	return longestre;
+}

@@ -14,6 +14,6 @@ int main()
 	cout<<"Number of:"<<test.numberOf('G')<<endl;
 	cout<<"Number of:"<<test.numberOf('T')<<endl;
     cout<<"LongestConsecutive:"<<test.longestConsecutive()<<endl;
-    cout<<test.longestRepeated()<<endl;
+    cout<<"LongestRepeated:"<<test.longestRepeated()<<endl;
 }
 
